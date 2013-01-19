@@ -1,8 +1,6 @@
-<?php
+<?php namespace Profiler;
 
-use Profiler\Profiler;
 use Profiler\Logger\Logger;
-
 use Illuminate\Support\ServiceProvider;
 
 class ProfilerServiceProvider extends ServiceProvider {
@@ -33,7 +31,7 @@ class ProfilerServiceProvider extends ServiceProvider {
 	}
 
 	/**
-	 * Register a Laravel event to automatically track database queries.
+	 * Register an event to automatically log database queries.
 	 *
 	 * @return void
 	 */
@@ -41,16 +39,24 @@ class ProfilerServiceProvider extends ServiceProvider {
 	{
 		$app = $this->app;
 
-		$app['event']->listen('illuminate.query', function($query) use ($app)
+		$app['events']->listen('illuminate.query', function($event) use ($app)
 		{
-			$query = $query['query'];
+			$query = $event->query;
 
-			foreach($query['bindings'] as $binding)
+			// If the query had some bindings we'll need to add those back
+			// in to the query.
+			if( ! empty($event->bindings))
 			{
-				$query = preg_replace('/?/', $binding, $query, 1);
+				// We'll use the current connection's PDO to quote the bindings.
+				$pdo = $app['db']->getPdo();
+
+				foreach($event->bindings as $binding)
+				{
+					$query = preg_replace('/\?/', $pdo->quote($binding), $query, 1);
+				}
 			}
 
-			$app['profiler']->log->query($query, $query['time']);
+			$app['profiler']->log->query($query, $event->time);
 		});
 	}
 }
