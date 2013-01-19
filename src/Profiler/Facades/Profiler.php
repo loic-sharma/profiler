@@ -11,7 +11,7 @@ class Profiler extends Facade {
      * @param array $context
      * @return null
      */
-    public function logEmergency($message, array $context = array())
+    public static function logEmergency($message, array $context = array())
     {
     	static::$app['profiler']->log->emergency($message, $context);
     }
@@ -26,7 +26,7 @@ class Profiler extends Facade {
      * @param array $context
      * @return null
      */
-    public function logAlert($message, array $context = array())
+    public static function logAlert($message, array $context = array())
     {
     	static::$app['profiler']->log->alert($message, $context);
     }
@@ -40,7 +40,7 @@ class Profiler extends Facade {
      * @param array $context
      * @return null
      */
-    public function logCritical($message, array $context = array())
+    public static function logCritical($message, array $context = array())
     {
     	static::$app['profiler']->log->critical($message, $context);
     }
@@ -53,7 +53,7 @@ class Profiler extends Facade {
      * @param array $context
      * @return null
      */
-    public function logError($message, array $context = array())
+    public static function logError($message, array $context = array())
     {
     	static::$app['profiler']->log->error($message, $context);
     }
@@ -68,7 +68,7 @@ class Profiler extends Facade {
      * @param array $context
      * @return null
      */
-    public function logWarning($message, array $context = array())
+    public static function logWarning($message, array $context = array())
     {
     	static::$app['profiler']->log->warning($message, $context);
     }
@@ -80,7 +80,7 @@ class Profiler extends Facade {
      * @param array $context
      * @return null
      */
-    public function logNotice($message, array $context = array())
+    public static function logNotice($message, array $context = array())
     {
     	static::$app['profiler']->log->notice($message, $context);
     }
@@ -94,7 +94,7 @@ class Profiler extends Facade {
      * @param array $context
      * @return null
      */
-    public function logInfo($message, array $context = array())
+    public static function logInfo($message, array $context = array())
     {
     	static::$app['profiler']->log->info($message, $context);
     }
@@ -106,7 +106,7 @@ class Profiler extends Facade {
      * @param array $context
      * @return null
      */
-    public static function logDebug($message, array $context = array())
+    public static static function logDebug($message, array $context = array())
     {
     	static::$app['profiler']->log->debug($message, $context);
     }
