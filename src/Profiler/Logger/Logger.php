@@ -85,14 +85,6 @@ class Logger extends AbstractLogger implements ProfilerLoggerInterface {
 		if(is_null($level))
 		{
 			return $this->logs;
-			$logs = array();
-
-			foreach($this->logs as $log)
-			{
-				$logs[] = $log;
-			}
-
-			return $logs;
 		}
 
 		else
