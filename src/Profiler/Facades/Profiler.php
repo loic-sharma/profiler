@@ -106,7 +106,7 @@ class Profiler extends Facade {
      * @param array $context
      * @return null
      */
-    public static static function logDebug($message, array $context = array())
+    public static function logDebug($message, array $context = array())
     {
     	static::$app['profiler']->log->debug($message, $context);
     }
