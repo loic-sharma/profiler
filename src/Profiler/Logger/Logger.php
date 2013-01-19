@@ -31,14 +31,33 @@ class Logger extends AbstractLogger implements ProfilerLoggerInterface {
 		$this->queries[] = compact('query', 'time');
 	}
 
-    /**
-     * Logs with an arbitrary level.
-     *
-     * @param  mixed   $level
-     * @param  string  $message
-     * @param  array   $context
-     * @return null
-     */
+	/**
+	 * Detailed debug information.
+	 *
+	 * @param string $message
+	 * @param array $context
+	 * @return null
+	 */
+	public function debug($value, array $context = array())
+	{
+		// If we were given anything other than a string,
+		// we'll get readable format of the value.
+		if( ! is_string($value))
+		{
+			$value = print_r($value, true);
+		}
+
+		$this->log(LogLevel::DEBUG, $value, $context);
+	}
+
+	/**
+	 * Logs with an arbitrary level.
+	 *
+	 * @param  mixed   $level
+	 * @param  string  $message
+	 * @param  array   $context
+	 * @return null
+	 */
 	public function log($level, $message, array $context = array())
 	{
 		$this->logs[] = compact('level', 'message', 'context');
