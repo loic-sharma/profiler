@@ -47,10 +47,14 @@ class ProfilerServiceProvider extends ServiceProvider {
 			// in to the query.
 			if( ! empty($event->bindings))
 			{
+				// Let's prepare the bindings before we try to insert them
+				// into the query.
+				$bindings = $app['db']->prepareBindings($event->bindings);
+
 				// We'll use the current connection's PDO to quote the bindings.
 				$pdo = $app['db']->getPdo();
 
-				foreach($event->bindings as $binding)
+				foreach($bindings as $binding)
 				{
 					$query = preg_replace('/\?/', $pdo->quote($binding), $query, 1);
 				}
