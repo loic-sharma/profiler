@@ -26,7 +26,15 @@ class ProfilerServiceProvider extends ServiceProvider {
 	{	
 		$this->app['profiler'] = $this->app->share(function($app)
 		{
-			return new Profiler(new Logger, LARAVEL_START);
+			$startTime = null;
+
+			// Let's use the Laravel start time if it is defined.
+			if(defined('LARAVEL_START'))
+			{
+				$startTime = LARAVEL_START;
+			}
+
+			return new Profiler(new Logger, $startTime);
 		});
 	}
 
