@@ -1,7 +1,7 @@
 {
     "name": "loic-sharma/profiler",
-    "description": "A simple profiler based on PHP Quick Profiler.",
-    "keywords": ["profiler"],
+    "description": "A PHP 5.3 profiler based off of Laravel 3's Anbu.",
+    "keywords": ["profiler", "laravel", "anbu"],
     "license": "MIT",
     "authors": [
         {
@@ -9,7 +9,7 @@
         }
     ],
     "require": {
-    	"php": ">=5.3.0",
+        "php": ">=5.3.0",
     	"psr/log": "1.0.*"
     },
     "autoload": {
