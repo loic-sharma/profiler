@@ -39,10 +39,6 @@ Profiler::logEmergency('The website is down right now.');
 
 Profiler::endTimer('testLoggin');
 
-Route::after(function()
-{
-	echo Profiler::render();	
-});
 ```
 
 ### Installing For Your Own Project

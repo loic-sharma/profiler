@@ -15,6 +15,8 @@ class ProfilerServiceProvider extends ServiceProvider {
 		$this->registerProfiler();
 
 		$this->registerProfilerQueryEvent();
+
+		$this->registerProfilerToOutput();
 	}
 
 	/**
@@ -69,6 +71,39 @@ class ProfilerServiceProvider extends ServiceProvider {
 			}
 
 			$app['profiler']->log->query($query, $event->time);
+		});
+	}
+
+	/**
+	 * Register an after filter to automatically display the profiler.
+	 *
+	 * @return void
+	 */
+	public function registerProfilerToOutput()
+	{
+		$app = $this->app;
+
+		$app['router']->after(function($request, $response) use($app)
+		{
+			$responseContent = $response->getContent();
+			$profiler = $app['profiler']->render();
+
+			// If we can find a closing HTML tag in the response, let's add the
+			// profiler content inside it.
+			if(($pos = strrpos($responseContent, '</html>')) !== false)
+			{
+				$responseContent = substr($responseContent, 0, $pos).$profiler.substr($responseContent, $pos);
+			}
+
+			// If we cannot find a closing HTML tag, we'll just append the profiler
+			// at the very end of the response's content.
+			else
+			{
+				$responseContent .= $profiler;
+			}
+
+
+			$response->setContent($responseContent);
 		});
 	}
 }
