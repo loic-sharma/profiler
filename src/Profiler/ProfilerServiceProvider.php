@@ -12,11 +12,17 @@ class ProfilerServiceProvider extends ServiceProvider {
 	 */
 	public function register()
 	{
+		// Register config file
+		$this->app['config']->package('loic-sharma/profiler', __DIR__.'/../config');
+
 		$this->registerProfiler();
 
 		$this->registerProfilerQueryEvent();
 
-		$this->registerProfilerToOutput();
+		if ($this->app['config']->get('profiler::auto_output'))
+		{
+			$this->registerProfilerToOutput();
+		}
 	}
 
 	/**
@@ -25,7 +31,7 @@ class ProfilerServiceProvider extends ServiceProvider {
 	 * @return void
 	 */
 	public function registerProfiler()
-	{	
+	{
 		$this->app['profiler'] = $this->app->share(function($app)
 		{
 			$startTime = null;
