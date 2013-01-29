@@ -85,6 +85,12 @@ class ProfilerServiceProvider extends ServiceProvider {
 
 		$app['router']->after(function($request, $response) use($app)
 		{
+			//Do not display profiler on ajax requests or json responses
+                        if($request->ajax() || $response->headers->get('Content-Type') === 'application/json')
+                        {
+                            return;
+                        }
+                        
 			$responseContent = $response->getContent();
 			$profiler = $app['profiler']->render();
 
