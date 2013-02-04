@@ -6,6 +6,13 @@ use Psr\Log\LoggerAwareInterface;
 class Profiler implements LoggerAwareInterface {
 
 	/**
+	 * Wether the profiler is enabled or not.
+	 *
+	 * @var bool
+	 */
+	public $enabled;
+
+	/**
 	 * The logger.
 	 *
 	 * @var Psr\Log\LoggerInterface
@@ -39,10 +46,11 @@ class Profiler implements LoggerAwareInterface {
 	 * @param  Psr\Logger\LoggerInterface $logger
 	 * @return void
 	 */
-	public function __construct(LoggerInterface $logger, $startTime = null)
+	public function __construct(LoggerInterface $logger, $startTime = null, $on = true)
 	{
 		$this->setLogger($logger);
 		$this->startTimer('application', $startTime);
+		$this->enable($on);
 	}
 
 	/**
@@ -54,6 +62,27 @@ class Profiler implements LoggerAwareInterface {
 	public function setLogger(LoggerInterface $logger)
 	{
 		$this->log = $logger;
+	}
+
+	/**
+	 * Enable the profiler.
+	 *
+	 * @param  bool  $on
+	 * @return void
+	 */
+	public function enable($on = true)
+	{
+		$this->enabled = $on;
+	}
+
+	/**
+	 * Disable the profiler.
+	 *
+	 * @return void
+	 */
+	public function disable()
+	{
+		$this->enable(false);
 	}
 
 	/**
@@ -236,15 +265,18 @@ class Profiler implements LoggerAwareInterface {
 	 */
 	public function render()
 	{
-		$profiler = $this;
-		$logger = $this->log;
-		$assetPath = __DIR__.'/../../assets/';
+		if($this->enabled)
+		{
+			$profiler = $this;
+			$logger = $this->log;
+			$assetPath = __DIR__.'/../../assets/';
 
-		ob_start();
+			ob_start();
 
-		include __DIR__ .'/../../views/profiler.php';
+			include __DIR__ .'/../../views/profiler.php';
 
-		return ob_get_clean();
+			return ob_get_clean();
+		}
 	}
 
 	/**

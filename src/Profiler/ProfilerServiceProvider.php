@@ -36,7 +36,11 @@ class ProfilerServiceProvider extends ServiceProvider {
 				$startTime = LARAVEL_START;
 			}
 
-			return new Profiler(new Logger, $startTime);
+			// We will enable the profiler only if the application
+			// is in debug mode.
+			$enabled = (bool) $app['config']->get('app.debug');
+
+			return new Profiler(new Logger, $startTime, $enabled);
 		});
 	}
 
