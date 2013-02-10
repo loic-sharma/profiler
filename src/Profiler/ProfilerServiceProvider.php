@@ -53,17 +53,15 @@ class ProfilerServiceProvider extends ServiceProvider {
 	{
 		$app = $this->app;
 
-		$app['events']->listen('illuminate.query', function($event) use ($app)
+		$app['events']->listen('illuminate.query', function($query, $bindings, $time) use ($app)
 		{
-			$query = $event->query;
-
 			// If the query had some bindings we'll need to add those back
 			// in to the query.
-			if( ! empty($event->bindings))
+			if( ! empty($bindings))
 			{
 				// Let's prepare the bindings before we try to insert them
 				// into the query.
-				$bindings = $app['db']->prepareBindings($event->bindings);
+				$bindings = $app['db']->prepareBindings($bindings);
 
 				// We'll use the current connection's PDO to quote the bindings.
 				$pdo = $app['db']->getPdo();
@@ -74,7 +72,7 @@ class ProfilerServiceProvider extends ServiceProvider {
 				}
 			}
 
-			$app['profiler']->log->query($query, $event->time);
+			$app['profiler']->log->query($query, $time);
 		});
 	}
 
@@ -90,10 +88,10 @@ class ProfilerServiceProvider extends ServiceProvider {
 		$app['router']->after(function($request, $response) use($app)
 		{
 			//Do not display profiler on ajax requests or json responses
-                        if($request->ajax() || $response->headers->get('Content-Type') === 'application/json')
-                        {
-                            return;
-                        }
+            if($request->ajax() || $response->headers->get('Content-Type') === 'application/json')
+            {
+            	return;
+            }
                         
 			$responseContent = $response->getContent();
 			$profiler = $app['profiler']->render();
