@@ -1,5 +1,6 @@
 <?php namespace Profiler\Logger;
 
+use Psr\Log\LogLevel;
 use Psr\Log\AbstractLogger;
 use Psr\Log\LoggerInterface;
 
