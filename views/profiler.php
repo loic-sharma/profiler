@@ -75,7 +75,7 @@
 					</tr>
 					<?php foreach($profiler->getIncludedFiles() as $file): ?>
 					<tr>
-						<td class="anbu-table-first"><?php echo $file['filePath']; ?></td>
+						<td class="anbu-table-first-wide"><?php echo $file['filePath']; ?></td>
 						<td><pre><?php echo $file['size']?></pre></td>
 						<td>&nbsp;</td>
 					</tr>
