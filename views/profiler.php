@@ -67,6 +67,22 @@
 					<?php endforeach; ?>
 				</table>
 			</div>
+			<div class="anbu-tab-pane anbu-table anbu-filecount">
+				<table>
+					<tr>
+						<th>File</th>
+						<th>Size</th>
+					</tr>
+					<?php foreach($profiler->getIncludedFiles() as $file): ?>
+					<tr>
+						<td class="anbu-table-first"><?php echo $file['filePath']; ?></td>
+						<td><pre><?php echo $file['size']?></pre></td>
+						<td>&nbsp;</td>
+					</tr>
+					
+					<?php endforeach; ?>
+				</table>
+			</div>			
 		</div>
 	</div>
 
@@ -82,6 +98,7 @@
 		</li>
 		<li><a class="anbu-tab" data-anbu-tab="anbu-checkpoints">Time <span class="anbu-count"><?php echo $profiler->getLoadTime(); ?>ms</span></a></li>
 		<li><a class="anbu-tab">Memory <span class="anbu-count"><?php echo $profiler->getMemoryUsage(); ?> (<?php echo $profiler->getMemoryPeak(); ?>)</span></a></li>
+		<li><a class="anbu-tab" data-anbu-tab="anbu-filecount">Files <span class="anbu-count"><?php echo count($profiler->getIncludedFiles()); ?></span></a></li>        
 		<li class="anbu-tab-right"><a id="anbu-hide" href="#">&#8614;</a></li>
 		<li class="anbu-tab-right"><a id="anbu-close" href="#">&times;</a></li>
 		<li class="anbu-tab-right"><a id="anbu-zoom" href="#">&#8645;</a></li>
