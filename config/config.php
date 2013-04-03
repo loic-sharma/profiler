@@ -4,7 +4,17 @@ return array(
 
   'enabled' => true,
 
-  'password' => '',
+  /*
+   * -----------------------------------------------------------------------------
+   * Password for enabling profiler
+   * -----------------------------------------------------------------------------
+   *
+   * This password is required to enable profiler on selected environments.
+   * 
+   * You should probably change it after installation.
+   */
+
+  'password' => 'yd8x',
 
   /*
    * -----------------------------------------------------------------------------

@@ -85,6 +85,16 @@ class Profiler implements LoggerAwareInterface {
 		$this->enable(false);
 	}
 
+  /**
+   * Check if profiler is enabled
+   *
+   * @return boolean
+   */
+  public function isEnabled()
+  {
+    return $this->enabled;
+  }
+
 	/**
 	 * Start a timer.
 	 *

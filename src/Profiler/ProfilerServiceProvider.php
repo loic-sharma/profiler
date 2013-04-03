@@ -10,6 +10,7 @@ class ProfilerServiceProvider extends ServiceProvider {
   public function boot()
   {
     $this->package('loic-sharma/profiler');
+
   }
 
 	/**
@@ -35,12 +36,9 @@ class ProfilerServiceProvider extends ServiceProvider {
 	 */
 	public function registerProfiler()
 	{	
-    $session_hash = static::SESSION_HASH;
-
-		$this->app['profiler'] = $this->app->share(function($app) use ($session_hash)
+		$this->app['profiler'] = $this->app->share(function($app)
 		{
 			$startTime = null;
-      $session = $app['session'];
 
 			// Let's use the Laravel start time if it is defined.
 			if(defined('LARAVEL_START'))
@@ -52,11 +50,6 @@ class ProfilerServiceProvider extends ServiceProvider {
 			// is in debug mode.
 			$enabled = (bool) $app['config']->get('profiler::enabled', $app['config']->get('app.debug'));
       $enabled = false;
-
-      if(!$enabled and $session->has($session_hash) and $session->get($session_hash))
-      {
-        $enabled = $session->get($session_hash);
-      }
 
 			return new Profiler(new Logger, $startTime, $enabled);
 		});
@@ -101,12 +94,21 @@ class ProfilerServiceProvider extends ServiceProvider {
 	 */
 	public function registerProfilerToOutput()
 	{
-		$app = $this->app;
+    $app = $this->app;
+    $session_hash = static::SESSION_HASH;
 
-		$app['router']->after(function($request, $response) use($app)
+		$app['router']->after(function($request, $response) use ($app, $session_hash)
 		{
+      $profiler = $app['profiler'];
+      $session = $app['session'];
+
+      if(!$profiler->isEnabled() and $session->has($session_hash) and $session->get($session_hash))
+      {
+        $profiler->enable($session->get($session_hash));
+      }
+
 			//Do not display profiler on ajax requests or non-html responses
-			if($request->ajax() or !\Str::startsWith($response->headers->get('Content-Type'), 'text/html'))
+			if(!$profiler->isEnabled() or $request->ajax() or !\Str::startsWith($response->headers->get('Content-Type'), 'text/html'))
 			{
 				return;
 			}
@@ -128,7 +130,6 @@ class ProfilerServiceProvider extends ServiceProvider {
 				$responseContent .= $profiler;
 			}
 
-
 			$response->setContent($responseContent);
 		});
 	}
@@ -144,7 +145,7 @@ class ProfilerServiceProvider extends ServiceProvider {
         $config = $app['config'];
         $password_required = in_array($app['env'], $config->get('profiler::require_password'));
 
-        if(!$password_required or ($password_required and $password !== $config->get('profiler::password')))
+        if(!$password_required or ($password_required and $password === $config->get('profiler::password')))
         {
           $app['session']->put($provider::SESSION_HASH, true);
         }
