@@ -5,6 +5,13 @@ use Illuminate\Support\ServiceProvider;
 
 class ProfilerServiceProvider extends ServiceProvider {
 
+  const SESSION_HASH = '_profiler';
+
+  public function boot()
+  {
+    $this->package('loic-sharma/profiler');
+  }
+
 	/**
 	 * Register the service provider.
 	 *
@@ -17,6 +24,8 @@ class ProfilerServiceProvider extends ServiceProvider {
 		$this->registerProfilerQueryEvent();
 
 		$this->registerProfilerToOutput();
+
+    $this->registerRouting();
 	}
 
 	/**
@@ -26,9 +35,12 @@ class ProfilerServiceProvider extends ServiceProvider {
 	 */
 	public function registerProfiler()
 	{	
-		$this->app['profiler'] = $this->app->share(function($app)
+    $session_hash = static::SESSION_HASH;
+
+		$this->app['profiler'] = $this->app->share(function($app) use ($session_hash)
 		{
 			$startTime = null;
+      $session = $app['session'];
 
 			// Let's use the Laravel start time if it is defined.
 			if(defined('LARAVEL_START'))
@@ -38,7 +50,13 @@ class ProfilerServiceProvider extends ServiceProvider {
 
 			// We will enable the profiler only if the application
 			// is in debug mode.
-			$enabled = (bool) $app['config']->get('app.profiler', $app['config']->get('app.debug'));
+			$enabled = (bool) $app['config']->get('profiler::enabled', $app['config']->get('app.debug'));
+      $enabled = false;
+
+      if(!$enabled and $session->has($session_hash) and $session->get($session_hash))
+      {
+        $enabled = $session->get($session_hash);
+      }
 
 			return new Profiler(new Logger, $startTime, $enabled);
 		});
@@ -114,4 +132,32 @@ class ProfilerServiceProvider extends ServiceProvider {
 			$response->setContent($responseContent);
 		});
 	}
+
+  public function registerRouting()
+  {
+    $provider = $this;
+
+    $this->app->booting(function($app) use ($provider)
+    {
+      $app['router']->get('/_profiler/enable/{password?}', function($password = null) use ($app, $provider)
+      {
+        $config = $app['config'];
+        $password_required = in_array($app['env'], $config->get('profiler::require_password'));
+
+        if(!$password_required or ($password_required and $password !== $config->get('profiler::password')))
+        {
+          $app['session']->put($provider::SESSION_HASH, true);
+        }
+
+        return $app['redirect']->to('/');
+      });
+
+      $app['router']->get('/_profiler/disable', function() use ($app, $provider)
+      {
+        $app['session']->forget($provider::SESSION_HASH);
+
+        return $app['redirect']->to('/');
+      });
+    });
+  }
 }
