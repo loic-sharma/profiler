@@ -9,8 +9,7 @@ class ProfilerServiceProvider extends ServiceProvider {
 
   public function boot()
   {
-    $this->package('loic-sharma/profiler');
-
+    $this->package('loic-sharma/profiler', null, __DIR__.'/../');
   }
 
 	/**
