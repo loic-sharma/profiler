@@ -48,7 +48,6 @@ class ProfilerServiceProvider extends ServiceProvider {
 			// We will enable the profiler only if the application
 			// is in debug mode.
 			$enabled = (bool) $app['config']->get('profiler::enabled', $app['config']->get('app.debug'));
-			$enabled = false;
 
 			return new Profiler(new Logger, $startTime, $enabled);
 		});
