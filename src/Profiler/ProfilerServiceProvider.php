@@ -5,12 +5,12 @@ use Illuminate\Support\ServiceProvider;
 
 class ProfilerServiceProvider extends ServiceProvider {
 
-  const SESSION_HASH = '_profiler';
+	const SESSION_HASH = '_profiler';
 
-  public function boot()
-  {
-    $this->package('loic-sharma/profiler', null, __DIR__.'/../');
-  }
+	public function boot()
+	{
+		$this->package('loic-sharma/profiler', null, __DIR__.'/../');
+	}
 
 	/**
 	 * Register the service provider.
@@ -25,7 +25,7 @@ class ProfilerServiceProvider extends ServiceProvider {
 
 		$this->registerProfilerToOutput();
 
-    $this->registerRouting();
+		$this->registerRouting();
 	}
 
 	/**
@@ -48,7 +48,7 @@ class ProfilerServiceProvider extends ServiceProvider {
 			// We will enable the profiler only if the application
 			// is in debug mode.
 			$enabled = (bool) $app['config']->get('profiler::enabled', $app['config']->get('app.debug'));
-      $enabled = false;
+			$enabled = false;
 
 			return new Profiler(new Logger, $startTime, $enabled);
 		});
@@ -93,25 +93,25 @@ class ProfilerServiceProvider extends ServiceProvider {
 	 */
 	public function registerProfilerToOutput()
 	{
-    $app = $this->app;
-    $session_hash = static::SESSION_HASH;
+		$app = $this->app;
+		$session_hash = static::SESSION_HASH;
 
 		$app['router']->after(function($request, $response) use ($app, $session_hash)
 		{
-      $profiler = $app['profiler'];
-      $session = $app['session'];
+			$profiler = $app['profiler'];
+			$session = $app['session'];
 
-      if(!$profiler->isEnabled() and $session->has($session_hash) and $session->get($session_hash))
-      {
-        $profiler->enable($session->get($session_hash));
-      }
+			if(!$profiler->isEnabled() and $session->has($session_hash) and $session->get($session_hash))
+			{
+				$profiler->enable($session->get($session_hash));
+			}
 
 			//Do not display profiler on ajax requests or non-html responses
 			if(!$profiler->isEnabled() or $request->ajax() or !\Str::startsWith($response->headers->get('Content-Type'), 'text/html'))
 			{
 				return;
 			}
-                        
+
 			$responseContent = $response->getContent();
 			$profiler = $app['profiler']->render();
 
@@ -133,31 +133,31 @@ class ProfilerServiceProvider extends ServiceProvider {
 		});
 	}
 
-  public function registerRouting()
-  {
-    $provider = $this;
+	public function registerRouting()
+	{
+		$provider = $this;
 
-    $this->app->booting(function($app) use ($provider)
-    {
-      $app['router']->get('/_profiler/enable/{password?}', function($password = null) use ($app, $provider)
-      {
-        $config = $app['config'];
-        $password_required = in_array($app['env'], $config->get('profiler::require_password'));
+		$this->app->booting(function($app) use ($provider)
+		{
+			$app['router']->get('/_profiler/enable/{password?}', function($password = null) use ($app, $provider)
+			{
+				$config = $app['config'];
+				$password_required = in_array($app['env'], $config->get('profiler::require_password'));
 
-        if(!$password_required or ($password_required and $password === $config->get('profiler::password')))
-        {
-          $app['session']->put($provider::SESSION_HASH, true);
-        }
+				if(!$password_required or ($password_required and $password === $config->get('profiler::password')))
+				{
+					$app['session']->put($provider::SESSION_HASH, true);
+				}
 
-        return $app['redirect']->to('/');
-      });
+				return $app['redirect']->to('/');
+			});
 
-      $app['router']->get('/_profiler/disable', function() use ($app, $provider)
-      {
-        $app['session']->forget($provider::SESSION_HASH);
+			$app['router']->get('/_profiler/disable', function() use ($app, $provider)
+			{
+				$app['session']->forget($provider::SESSION_HASH);
 
-        return $app['redirect']->to('/');
-      });
-    });
-  }
+				return $app['redirect']->to('/');
+			});
+		});
+	}
 }
