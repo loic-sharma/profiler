@@ -37,7 +37,7 @@ Profiler::logError('Runtime error.');
 Profiler::logCritical('This needs to be fixed now!');
 Profiler::logEmergency('The website is down right now.');
 
-Profiler::endTimer('testLoggin');
+Profiler::endTimer('testLogging');
 
 ```
 
