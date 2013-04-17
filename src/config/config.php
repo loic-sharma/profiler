@@ -21,11 +21,11 @@ return array(
 	|
 	| This password is required to enable profiler on selected environments.
 	| 
-	| You should probably change it after installation.
+	| You should change it after installation.
 	|
 	*/
 
-	'password' => 'yd8x',
+	'password' => false,
 
 	/*
 	| -----------------------------------------------------------------------------
