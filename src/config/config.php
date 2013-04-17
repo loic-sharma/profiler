@@ -7,12 +7,11 @@ return array(
 	| Enable profiler
 	| -----------------------------------------------------------------------------
 	|
-	| If this option is set to TRUE profiler will stay enabled even after
-	| disabling it through URL (/_profiler/disable)
+	| Uncomment this option to force the profiler, regardless of app.debug
 	|
 	*/
 
-	'enabled' => true,
+	//'enabled' => true,
 
 	/*
 	| -----------------------------------------------------------------------------
