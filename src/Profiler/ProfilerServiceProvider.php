@@ -134,6 +134,11 @@ class ProfilerServiceProvider extends ServiceProvider {
 		});
 	}
 
+	/**
+	 * Register routes to enable or disable the profiler.
+	 *
+	 * @return void
+	 */
 	public function registerRouting()
 	{
 		$provider = $this;
@@ -145,7 +150,7 @@ class ProfilerServiceProvider extends ServiceProvider {
 				$config = $app['config'];
 				$password_required = in_array($app['env'], $config->get('profiler::require_password'));
 
-				if(!$password_required or ($password_required and $password === $config->get('profiler::password')))
+				if( ! $password_required or ($password_required and $password === $config->get('profiler::password')))
 				{
 					$app['session']->put($provider::SESSION_HASH, true);
 				}
