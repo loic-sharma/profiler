@@ -7,8 +7,11 @@ return array(
 	| Enable profiler
 	| -----------------------------------------------------------------------------
 	|
-	| If this option is set to TRUE profiler will stay enabled even after
-	| disabling it through URL (/_profiler/disable)
+	| By default, enabled is set to null. This tells the profiler to use the
+	| application's debug configuration. However, if enabled is set to true the
+	| profiler will be displayed even if the application's debugging is disabled.
+	| Likewise, setting enabled to false will hide the profiler even if debugging
+	| is on.
 	|
 	*/
 
@@ -19,7 +22,7 @@ return array(
 	| Password for enabling profiler
 	| -----------------------------------------------------------------------------
 	|
-	| This password is required to enable profiler on selected environments.
+	| This password is required to enable the profiler on selected environments.
 	| 
 	| You should change it after installation.
 	|
@@ -32,8 +35,10 @@ return array(
 	| Require password on selected environments
 	| -----------------------------------------------------------------------------
 	|
-	| Profiler can be enabled by running: /_profiler/enable/{password} in browser.
-	| Some environemts require password to be given before enabling.
+	| The profiler can be enabled by running directing your browser to:
+	| /_profiler/enable/{password}
+	|
+	| The following environments will require a password to be given.
 	|
 	*/
 
