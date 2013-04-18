@@ -100,7 +100,7 @@ class ProfilerServiceProvider extends ServiceProvider {
 			$profiler = $app['profiler'];
 			$session = $app['session'];
 
-			if(!$profiler->isEnabled() and $session->has($session_hash) and $session->get($session_hash))
+			if($session->has($session_hash))
 			{
 				$profiler->enable($session->get($session_hash));
 			}
@@ -152,6 +152,13 @@ class ProfilerServiceProvider extends ServiceProvider {
 			});
 
 			$app['router']->get('/_profiler/disable', function() use ($app, $provider)
+			{
+				$app['session']->put($provider::SESSION_HASH, false);
+
+				return $app['redirect']->to('/');
+			});
+			
+			$app['router']->get('/_profiler/reset', function() use ($app, $provider)
 			{
 				$app['session']->forget($provider::SESSION_HASH);
 
