@@ -105,8 +105,10 @@ class ProfilerServiceProvider extends ServiceProvider {
 				$profiler->enable($session->get($session_hash));
 			}
 
-			//Do not display profiler on ajax requests or non-html responses
-			if(!$profiler->isEnabled() or $request->ajax() or !\Str::startsWith($response->headers->get('Content-Type'), 'text/html'))
+			// Do not display profiler on ajax requests or non-HTML responses.
+			$isHTML = \Str::startsWith($response->headers->get('Content-Type'), 'text/html');
+
+			if( ! $profiler->isEnabled() or $request->ajax() or ! $isHTML)
 			{
 				return;
 			}
