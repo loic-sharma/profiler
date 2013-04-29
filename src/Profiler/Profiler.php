@@ -15,7 +15,7 @@ class Profiler implements LoggerAwareInterface {
 	/**
 	 * The logger.
 	 *
-	 * @var Psr\Log\LoggerInterface
+	 * @var \Psr\Log\LoggerInterface
 	 */
 	public $log;
 
@@ -102,7 +102,7 @@ class Profiler implements LoggerAwareInterface {
 	 *
 	 * @param $timer
 	 * @param mixed $startTime
-	 * @return Profiler\Profiler
+	 * @return \Profiler\Profiler
 	 */
 	public function startTimer($timer, $startTime = null)
 	{
