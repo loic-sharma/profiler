@@ -43,7 +43,9 @@ class Profiler implements LoggerAwareInterface {
 	/**
 	 * Register the logger and application start time.
 	 *
-	 * @param  Psr\Logger\LoggerInterface $logger
+	 * @param  \Psr\Log\LoggerInterface $logger
+	 * @param mixed $startTime
+	 * @param bool $on
 	 * @return void
 	 */
 	public function __construct(LoggerInterface $logger, $startTime = null, $on = true)
@@ -56,7 +58,7 @@ class Profiler implements LoggerAwareInterface {
 	/**
 	 * Set the logger.
 	 *
-	 * @param  Psr\Logger\LoggerInterface $logger
+	 * @param  \Psr\Log\LoggerInterface $logger
 	 * @return void
 	 */
 	public function setLogger(LoggerInterface $logger)
@@ -98,6 +100,8 @@ class Profiler implements LoggerAwareInterface {
 	/**
 	 * Start a timer.
 	 *
+	 * @param $timer
+	 * @param mixed $startTime
 	 * @return Profiler\Profiler
 	 */
 	public function startTimer($timer, $startTime = null)
@@ -115,7 +119,9 @@ class Profiler implements LoggerAwareInterface {
 	/**
 	 * End a timer.
 	 *
-	 * @return Profiler\Profiler
+	 * @param string $timer
+	 * @param mixed $endTime
+	 * @return \Profiler\Profiler
 	 */
 	public function endTimer($timer, $endTime = null)
 	{
