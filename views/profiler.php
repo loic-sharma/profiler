@@ -109,6 +109,6 @@
 	</ul>
 </div>
 
-<script>window.jQuery || document.write('<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"><\/script>')</script>
+<script src='//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js'></script>
 <script><?php echo file_get_contents($assetPath.'profiler.js'); ?></script>
 <!-- /ANBU - LARAVEL PROFILER -->
