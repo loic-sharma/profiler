@@ -64,8 +64,6 @@ $profiler->endTimer('testLogging');
 echo $profiler;
 ```
 
-Note that the Logger can be any PSR-3 compliant logger, such as Monolog.
-
 ## Copyright and License
 
 Profiler was written by Loic Sharma. Profiler is released under the 2-clause BSD License. See the LICENSE file for details.
