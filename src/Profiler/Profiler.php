@@ -158,7 +158,7 @@ class Profiler implements LoggerAwareInterface {
 
 		else
 		{
-			throw new Exception("Todo: InvalidArgumentException");
+			throw new \InvalidArgumentException("Could not find timer [$timer].");
 		}
 	}
 
