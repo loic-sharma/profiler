@@ -136,12 +136,12 @@ class Profiler implements LoggerAwareInterface {
 	}
 
 	/**
-	 * Get a timer.
+	 * Get the amount of time that passed during a timer.
 	 *
 	 * @param  string  $timer
 	 * @return double
 	 */
-	public function getTimer($timer)
+	public function getElapsedTime($timer)
 	{
 		if(isset($this->timers[$timer]))
 		{
@@ -173,7 +173,7 @@ class Profiler implements LoggerAwareInterface {
 
 		foreach($this->timers as $timer => $data)
 		{
-			$timers[$timer] = $this->getTimer($timer);
+			$timers[$timer] = $this->getElapsedTime($timer);
 		}
 
 		return $timers;
@@ -186,7 +186,7 @@ class Profiler implements LoggerAwareInterface {
 	 */
 	public function getLoadTime()
 	{
-		return $this->endTimer('application')->getTimer('application');
+		return $this->endTimer('application')->getElapsedTime('application');
 	}
 
 	/**
