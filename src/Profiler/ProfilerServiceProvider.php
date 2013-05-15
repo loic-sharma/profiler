@@ -23,7 +23,7 @@ class ProfilerServiceProvider extends ServiceProvider {
 
 		$this->registerProfilerQueryEvent();
 
-		$this->registerRouting();
+		$this->registerProfilerRouting();
 
 		$this->registerProfilerToOutput();
 	}
@@ -98,7 +98,7 @@ class ProfilerServiceProvider extends ServiceProvider {
 	 *
 	 * @return void
 	 */
-	public function registerRouting()
+	public function registerProfilerRouting()
 	{
 		$provider = $this;
 
@@ -141,16 +141,16 @@ class ProfilerServiceProvider extends ServiceProvider {
 	public function registerProfilerToOutput()
 	{
 		$app = $this->app;
-		$session_hash = static::SESSION_HASH;
+		$sessionHash = static::SESSION_HASH;
 
-		$app['router']->after(function($request, $response) use ($app, $session_hash)
+		$app['router']->after(function($request, $response) use ($app, $sessionHash)
 		{
 			$profiler = $app['profiler'];
 			$session = $app['session'];
 
-			if($session->has($session_hash))
+			if($session->has($sessionHash))
 			{
-				$profiler->enable($session->get($session_hash));
+				$profiler->enable($session->get($sessionHash));
 			}
 
 			// Do not display profiler on ajax requests or non-HTML responses.
@@ -162,7 +162,7 @@ class ProfilerServiceProvider extends ServiceProvider {
 			}
 
 			$responseContent = $response->getContent();
-			$profiler = $app['profiler']->render();
+			$profiler = $profiler->render();
 
 			// If we can find a closing HTML tag in the response, let's add the
 			// profiler content inside it.
