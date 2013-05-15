@@ -130,14 +130,14 @@ class Profiler implements LoggerAwareInterface {
 	}
 
 	/**
-	 * An alias of "getElapsedTime" for backwards compatibility.
+	 * Get a timer.
 	 *
 	 * @param  string  $timer
 	 * @return double
 	 */
 	public function getTimer($timer)
 	{
-		return $this->getElapsedTime($timer);
+		return $this->timers[$timer];
 	}
 
 	/**
