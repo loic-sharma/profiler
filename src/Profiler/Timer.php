@@ -43,7 +43,7 @@ class Timer {
 	}
 
 	/**
-	 * Get the amount of time (in seconds) that elapsed while the timer
+	 * Get the amount of time (in milliseconds) that elapsed while the timer
 	 * was turned on.
 	 *
 	 * @return double
