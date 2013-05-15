@@ -113,8 +113,6 @@ class Profiler implements LoggerAwareInterface {
 	 */
 	public function endTimer($timer, $endTime = null)
 	{
-		// Let's prevent the timer from updating itself if it
-		// is ended more than once.
 		$this->timers[$timer]->end($endTime);
 
 		return $this;
