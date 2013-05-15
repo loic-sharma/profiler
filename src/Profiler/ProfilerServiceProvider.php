@@ -23,9 +23,9 @@ class ProfilerServiceProvider extends ServiceProvider {
 
 		$this->registerProfilerQueryEvent();
 
-		$this->registerProfilerToOutput();
-
 		$this->registerRouting();
+
+		$this->registerProfilerToOutput();
 	}
 
 	/**
@@ -94,6 +94,46 @@ class ProfilerServiceProvider extends ServiceProvider {
 	}
 
 	/**
+	 * Register routes to enable or disable the profiler.
+	 *
+	 * @return void
+	 */
+	public function registerRouting()
+	{
+		$provider = $this;
+
+		$this->app->booting(function($app) use ($provider)
+		{
+			$app['router']->get('/_profiler/enable/{password?}', function($password = null) use ($app, $provider)
+			{
+				$config = $app['config'];
+				$password_required = in_array($app['env'], $config->get('profiler::require_password'));
+
+				if( ! $password_required or ($password_required and $password === $config->get('profiler::password')))
+				{
+					$app['session']->put($provider::SESSION_HASH, true);
+				}
+
+				return $app['redirect']->to('/');
+			});
+
+			$app['router']->get('/_profiler/disable', function() use ($app, $provider)
+			{
+				$app['session']->put($provider::SESSION_HASH, false);
+
+				return $app['redirect']->to('/');
+			});
+			
+			$app['router']->get('/_profiler/reset', function() use ($app, $provider)
+			{
+				$app['session']->forget($provider::SESSION_HASH);
+
+				return $app['redirect']->to('/');
+			});
+		});
+	}
+
+	/**
 	 * Register an after filter to automatically display the profiler.
 	 *
 	 * @return void
@@ -142,43 +182,4 @@ class ProfilerServiceProvider extends ServiceProvider {
 		});
 	}
 
-	/**
-	 * Register routes to enable or disable the profiler.
-	 *
-	 * @return void
-	 */
-	public function registerRouting()
-	{
-		$provider = $this;
-
-		$this->app->booting(function($app) use ($provider)
-		{
-			$app['router']->get('/_profiler/enable/{password?}', function($password = null) use ($app, $provider)
-			{
-				$config = $app['config'];
-				$password_required = in_array($app['env'], $config->get('profiler::require_password'));
-
-				if( ! $password_required or ($password_required and $password === $config->get('profiler::password')))
-				{
-					$app['session']->put($provider::SESSION_HASH, true);
-				}
-
-				return $app['redirect']->to('/');
-			});
-
-			$app['router']->get('/_profiler/disable', function() use ($app, $provider)
-			{
-				$app['session']->put($provider::SESSION_HASH, false);
-
-				return $app['redirect']->to('/');
-			});
-			
-			$app['router']->get('/_profiler/reset', function() use ($app, $provider)
-			{
-				$app['session']->forget($provider::SESSION_HASH);
-
-				return $app['redirect']->to('/');
-			});
-		});
-	}
 }
