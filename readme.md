@@ -26,9 +26,6 @@ To enable te profiler in Laravel 4 you will need to register the Service Provide
 And voila! You can use the profiler.
 
 ```php
-
-Profiler::logDebug($object);
-
 Profiler::startTimer('testLogging');
 
 // The profiler listens to Laravel's logger.
@@ -44,7 +41,8 @@ Profiler::endTimer('testLogging');
 Add the following to your code:
 
 ```php
-$profiler = new Profiler\Profiler(new Profiler\Logger\Logger);
+$logger = new Profiler\Logger\Logger;
+$profiler = new Profiler\Profiler($logger);
 ```
 
 You can now use the profiler to your heart's content.
@@ -53,19 +51,20 @@ You can now use the profiler to your heart's content.
 
 $profiler->startTimer('testLogging');
 
-$profiler->log->debug($object);
-
-$profiler->log->info('Hello World!');
-$profiler->log->notice('Some event occurred.');
-$profiler->log->warning('Careful: some warning.');
-$profiler->log->error('Runtime error.');
-$profiler->log->critical('This needs to be fixed now!');
-$profiler->log->emergency('The website is down right now.');
+$logger->debug($object);
+$logger->info('Hello World!');
+$logger->notice('Some event occurred.');
+$logger->warning('Careful: some warning.');
+$logger->error('Runtime error.');
+$logger->critical('This needs to be fixed now!');
+$logger->emergency('The website is down right now.');
 
 $profiler->endTimer('testLogging');
 
 echo $profiler;
 ```
+
+Note that the Logger can be any PSR-3 compliant logger, such as Monolog.
 
 ## Copyright and License
 
