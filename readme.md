@@ -31,12 +31,9 @@ Profiler::logDebug($object);
 
 Profiler::startTimer('testLogging');
 
-Profiler::logInfo('Hello World!');
-Profiler::logNotice('Some event occurred.');
-Profiler::logWarning('Careful: some warning.');
-Profiler::logError('Runtime error.');
-Profiler::logCritical('This needs to be fixed now!');
-Profiler::logEmergency('The website is down right now.');
+// The profiler listens to Laravel's logger.
+Log::info('Hello World!');
+Log::notice('Some event occured.');
 
 Profiler::endTimer('testLogging');
 
