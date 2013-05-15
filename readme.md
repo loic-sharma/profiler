@@ -19,7 +19,7 @@ Installing profiler is simple. First, you'll need to add the package to the `req
 
 To enable te profiler in Laravel 4 you will need to register the Service Provider and the Facade.
 
-1. Add `Profiler\ProfilerServiceProvider` to the list of service providers in `app/config/app.php`
+1. Add `'Profiler\ProfilerServiceProvider',` to the list of service providers in `app/config/app.php`
 2. Add `'Profiler' => 'Profiler\Facades\Profiler',` to the list of class aliases in `app/config/app.php`
 3. In console run `php artisan config:publish loic-sharma/profiler`
 
