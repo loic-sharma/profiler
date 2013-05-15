@@ -50,6 +50,10 @@ class Timer {
 	 */
 	public function getElapsedTime()
 	{
+		// Make sure the timer is turned off before we attempt
+		// to measure how much time elapsed.
+		$this->end();
+
 		return round(1000 * ($this->endTime - $this->startTime), 4);
 	}
 }
