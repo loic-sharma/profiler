@@ -71,7 +71,7 @@ class ProfilerServiceProvider extends ServiceProvider {
 		$app['events']->listen('illuminate.query', function($query, $bindings, $time, $connectionName) use ($app)
 		{
 			// If the query had some bindings we'll need to add those back
-			// in to the query.
+			// into the query.
 			if( ! empty($bindings))
 			{
 				// Let's grab the query's connection. We will use it to prepare and then quote
