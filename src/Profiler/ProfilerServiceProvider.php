@@ -68,19 +68,21 @@ class ProfilerServiceProvider extends ServiceProvider {
 	{
 		$app = $this->app;
 
-		$app['events']->listen('illuminate.query', function($query, $bindings, $time) use ($app)
+		$app['events']->listen('illuminate.query', function($query, $bindings, $time, $connectionName) use ($app)
 		{
 			// If the query had some bindings we'll need to add those back
 			// in to the query.
 			if( ! empty($bindings))
 			{
-				// Let's prepare the bindings before we try to insert them
-				// into the query.
-				$bindings = $app['db']->prepareBindings($bindings);
+				// Let's grab the query's connection. We will use it to prepare and then quote
+				// the bindings before they are inserted back into the query.
+				$connection = $app['db']->connection($connectionName);
+				$pdo = $connection->getPdo();
 
-				// We'll use the current connection's PDO to quote the bindings.
-				$pdo = $app['db']->getPdo();
+				$bindings = $connection->prepareBindings($bindings);
 
+				// Let's loop add each binding back into the original query, one binding
+				// at a time.
 				foreach($bindings as $binding)
 				{
 					$query = preg_replace('/\?/', $pdo->quote($binding), $query, 1);
