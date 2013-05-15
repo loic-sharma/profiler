@@ -21,6 +21,8 @@ class ProfilerServiceProvider extends ServiceProvider {
 	{
 		$this->registerProfiler();
 
+		$this->registerProfilerLoggerEvent();
+
 		$this->registerProfilerQueryEvent();
 
 		$this->registerProfilerRouting();
@@ -56,6 +58,21 @@ class ProfilerServiceProvider extends ServiceProvider {
 			}
 
 			return new Profiler(new Logger, $startTime, $enabled);
+		});
+	}
+
+	/**
+	 * Register an event to automatically fetch Laravel's logs.
+	 *
+	 * @return void
+	 */
+	public function registerProfilerLoggerEvent()
+	{
+		$app = $this->app;
+
+		$app['events']->listen('illuminate.log', function($level, $message, $context) use ($app)
+		{
+			$app['profiler']->log->log($level, $message, $context);
 		});
 	}
 
