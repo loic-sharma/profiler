@@ -60,7 +60,7 @@
 						<td class="anbu-table-first">
 							<?php echo $name; ?>
 						</td>
-						<td><pre><?php echo $timer; ?>ms</pre></td>
+						<td><pre><?php echo $timer->getElapsedTime(); ?>ms</pre></td>
 						<td>&nbsp;</td>
 					</tr>
 					

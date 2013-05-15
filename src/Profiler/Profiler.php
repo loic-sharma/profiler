@@ -141,20 +141,13 @@ class Profiler implements LoggerAwareInterface {
 	}
 
 	/**
-	 * Get all of the executed timers.
+	 * Get all of the timers.
 	 *
 	 * @return array
 	 */
 	public function getTimers()
 	{
-		$timers = array();
-
-		foreach($this->timers as $timer => $data)
-		{
-			$timers[$timer] = $this->getElapsedTime($timer);
-		}
-
-		return $timers;
+		return $this->timers;
 	}
 
 	/**
