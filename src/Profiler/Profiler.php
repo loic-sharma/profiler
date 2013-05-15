@@ -125,12 +125,17 @@ class Profiler implements LoggerAwareInterface {
 	 */
 	public function endTimer($timer, $endTime = null)
 	{
-		if(is_null($endTime))
-		{
-			$endTime = microtime(true);
-		}
+		// Let's prevent the timer from updating itself if it
+		// is ended more than once.
+		if( ! isset($this->timers[$timer]['end']))
+		{		
+			if(is_null($endTime))
+			{
+				$endTime = microtime(true);
+			}
 
-		$this->timers[$timer]['end'] = $endTime;
+			$this->timers[$timer]['end'] = $endTime;
+		}
 
 		return $this;
 	}
@@ -145,11 +150,8 @@ class Profiler implements LoggerAwareInterface {
 	{
 		if(isset($this->timers[$timer]))
 		{
-			// Turn off the timer if it hasn't been already.
-			if( ! isset($this->timers[$timer]['end']))
-			{
-				$this->endTimer($timer);
-			}
+			// Make sure the timer is turned off.
+			$this->endTimer($timer);
 
 			$timer = $this->timers[$timer];
 
