@@ -20,13 +20,6 @@ class Profiler implements LoggerAwareInterface {
 	public $log;
 
 	/**
-	 * The application start time.
-	 *
-	 * @var int
-	 */
-	protected $startTime;
-
-	/**
 	 * All of the stored timers.
 	 *
 	 * @var array
@@ -106,12 +99,7 @@ class Profiler implements LoggerAwareInterface {
 	 */
 	public function startTimer($timer, $startTime = null)
 	{
-		if(is_null($startTime))
-		{
-			$startTime = microtime(true);
-		}
-
-		$this->timers[$timer]['start'] = $startTime;
+		$this->timers[$timer] = new Timer($startTime);
 
 		return $this;
 	}
@@ -127,15 +115,7 @@ class Profiler implements LoggerAwareInterface {
 	{
 		// Let's prevent the timer from updating itself if it
 		// is ended more than once.
-		if( ! isset($this->timers[$timer]['end']))
-		{		
-			if(is_null($endTime))
-			{
-				$endTime = microtime(true);
-			}
-
-			$this->timers[$timer]['end'] = $endTime;
-		}
+		$this->timers[$timer]->end($endTime);
 
 		return $this;
 	}
@@ -148,20 +128,7 @@ class Profiler implements LoggerAwareInterface {
 	 */
 	public function getElapsedTime($timer)
 	{
-		if(isset($this->timers[$timer]))
-		{
-			// Make sure the timer is turned off.
-			$this->endTimer($timer);
-
-			$timer = $this->timers[$timer];
-
-			return round(1000 * ($timer['end'] - $timer['start']), 4);
-		}
-
-		else
-		{
-			throw new \InvalidArgumentException("Could not find timer [$timer].");
-		}
+		return $this->timers[$timer]->getElapsedTime();
 	}
 
 	/**
