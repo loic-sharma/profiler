@@ -148,7 +148,7 @@ class Profiler implements LoggerAwareInterface {
 			// Turn off the timer if it hasn't been already.
 			if( ! isset($this->timers[$timer]['end']))
 			{
-				$this->timers[$timer]['end'] = microtime(true);
+				$this->endTimer($timer);
 			}
 
 			$timer = $this->timers[$timer];
