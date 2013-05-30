@@ -9,7 +9,7 @@ Installing profiler is simple. First, you'll need to add the package to the `req
 ```json
 {
     "require": {
-        "loic-sharma/profiler": "1.0.*"
+        "loic-sharma/profiler": "1.1.*"
     },
 }
 ``` 
