@@ -7,11 +7,6 @@ class ProfilerServiceProvider extends ServiceProvider {
 
 	const SESSION_HASH = '_profiler';
 
-	public function boot()
-	{
-		$this->package('loic-sharma/profiler', null, __DIR__.'/../');
-	}
-
 	/**
 	 * Register the service provider.
 	 *
@@ -19,6 +14,8 @@ class ProfilerServiceProvider extends ServiceProvider {
 	 */
 	public function register()
 	{
+		$this->package('loic-sharma/profiler', null, __DIR__.'/../');
+
 		$this->registerProfiler();
 
 		$this->registerProfilerLoggerEvent();
