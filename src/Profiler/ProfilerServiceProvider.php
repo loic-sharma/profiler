@@ -54,7 +54,7 @@ class ProfilerServiceProvider extends ServiceProvider {
 				$enabled = $app['config']->get('app.debug');
 			}
 
-			return new Profiler(new Logger, $startTime, $enabled);
+			return new Profiler(new Logger, $app['view'], $startTime, $enabled);
 		});
 	}
 
