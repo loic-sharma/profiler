@@ -1,0 +1,16 @@
+<?xml version='1.0' standalone='yes'?>
+<config>
+    <topics>
+        <topic btn="user">user</topic>
+        <topic btn="file">files</topic>
+        <topic btn="server">server</topic>
+        <topic btn="conf">config</topic>
+        <topic btn="get">input</topic>
+		<topic btn="session">session</topic>
+        <topic btn="facades">facades</topic>
+        
+        <topic btn="artisan">artisan</topic>
+        
+    </topics>
+    <url>http://www.laravel.fr/docs/4/</url>
+</config>
