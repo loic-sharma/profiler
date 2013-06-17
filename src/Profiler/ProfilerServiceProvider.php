@@ -84,26 +84,30 @@ class ProfilerServiceProvider extends ServiceProvider {
 
 		$app['events']->listen('illuminate.query', function($query, $bindings, $time, $connectionName) use ($app)
 		{
-			// If the query had some bindings we'll need to add those back
-			// into the query.
-			if( ! empty($bindings))
+			// Don't log the query if the profiler is disabled.
+			if($app['profiler']->isEnabled())
 			{
-				// Let's grab the query's connection. We will use it to prepare and then quote
-				// the bindings before they are inserted back into the query.
-				$connection = $app['db']->connection($connectionName);
-				$pdo = $connection->getPdo();
-
-				$bindings = $connection->prepareBindings($bindings);
-
-				// Let's loop add each binding back into the original query, one binding
-				// at a time.
-				foreach($bindings as $binding)
+				// If the query had some bindings we'll need to add those back
+				// into the query.
+				if( ! empty($bindings))
 				{
-					$query = preg_replace('/\?/', $pdo->quote($binding), $query, 1);
-				}
-			}
+					// Let's grab the query's connection. We will use it to prepare and then quote
+					// the bindings before they are inserted back into the query.
+					$connection = $app['db']->connection($connectionName);
+					$pdo = $connection->getPdo();
 
-			$app['profiler']->log->query($query, $time);
+					$bindings = $connection->prepareBindings($bindings);
+
+					// Let's loop add each binding back into the original query, one binding
+					// at a time.
+					foreach($bindings as $binding)
+					{
+						$query = preg_replace('/\?/', $pdo->quote($binding), $query, 1);
+					}
+				}
+
+				$app['profiler']->log->query($query, $time);
+			}
 		});
 	}
 
