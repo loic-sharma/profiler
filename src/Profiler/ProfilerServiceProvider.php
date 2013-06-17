@@ -69,7 +69,10 @@ class ProfilerServiceProvider extends ServiceProvider {
 
 		$app['events']->listen('illuminate.log', function($level, $message, $context) use ($app)
 		{
-			$app['profiler']->log->log($level, $message, $context);
+			if($app['profiler']->isEnabled())
+			{
+				$app['profiler']->log->log($level, $message, $context);
+			}
 		});
 	}
 
