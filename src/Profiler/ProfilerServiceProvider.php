@@ -183,23 +183,28 @@ class ProfilerServiceProvider extends ServiceProvider {
 			}
 
 			$responseContent = $response->getContent();
-			$profiler = $profiler->render();
 
-			// If we can find a closing HTML tag in the response, let's add the
-			// profiler content inside it.
-			if(($pos = strrpos($responseContent, '</html>')) !== false)
+			// Don't do anything if the response content is not a string.
+			if(is_string($responseContent))
 			{
-				$responseContent = substr($responseContent, 0, $pos).$profiler.substr($responseContent, $pos);
-			}
+				$profiler = $profiler->render();
 
-			// If we cannot find a closing HTML tag, we'll just append the profiler
-			// at the very end of the response's content.
-			else
-			{
-				$responseContent .= $profiler;
-			}
+				// If we can find a closing HTML tag in the response, let's add the
+				// profiler content inside it.
+				if(($pos = strrpos($responseContent, '</html>')) !== false)
+				{
+					$responseContent = substr($responseContent, 0, $pos).$profiler.substr($responseContent, $pos);
+				}
 
-			$response->setContent($responseContent);
+				// If we cannot find a closing HTML tag, we'll just append the profiler
+				// at the very end of the response's content.
+				else
+				{
+					$responseContent .= $profiler;
+				}
+
+				$response->setContent($responseContent);
+			}
 		});
 	}
 
