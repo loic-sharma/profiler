@@ -38,8 +38,21 @@
 
 #anbu-open-tabs li:first-child
 {
-	margin-left:6em;
+	margin-left:1em;
+	margin-right:1em;
 }
+#anbu-open-tabs li:first-child a
+{
+	min-width: 2em;	
+}
+#anbu-open-tabs li:first-child a:hover
+{
+	background-color:transparent !important;
+}
+.anbu-table td.anbu-center {
+	text-align: center !important;
+}
+
 
 .anbu-tabs li
 {
@@ -55,7 +68,7 @@
 	display:inline-block;
 	text-decoration:none !important;
 	font-size:0.8em !important;
-	padding: 0.8em 2em 0.7em 2em !important;
+	padding: 0.8em 1.2em 0.7em 1.2em !important;
 	-webkit-transition-property:color, background-color;
 	-webkit-transition-duration: 0.7s, 0.2s;
 	-webkit-transition-timing-function: ease-in, ease-in;
@@ -188,6 +201,18 @@
 	width:10% !important;
 }
 
+.anbu-table-first-more
+{
+	background-color:#eee !important;
+	border-right:1px solid #ccc !important;
+	width:20% !important;
+}
+.anbu-table-first-middle
+{
+	background-color:#eee !important;
+	border-right:1px solid #ccc !important;
+	width:50% !important;
+}
 .anbu-table-first-wide
 {
 	background-color:#eee !important;

@@ -26,27 +26,37 @@ class Profiler implements LoggerAwareInterface {
 	 */
 	protected $timers = array();
 
-	/**
-	 * The included files.
-	 *
-	 * @var array
-	 */
-	protected $includedFiles = array();
+	
+	protected $topicsInfos;
+	
+	protected $view;
+	
 
 	/**
 	 * Register the logger and application start time.
 	 *
 	 * @param  \Psr\Log\LoggerInterface  $logger
+	 * @param  View  $view
 	 * @param  mixed  $startTime
 	 * @param  bool  $on
 	 * @return void
 	 */
-	public function __construct(LoggerInterface $logger, $startTime = null, $on = true)
+	public function __construct(LoggerInterface $logger, $view, $startTime = null, $on = true)
 	{
 		$this->setLogger($logger);
+		$this->view = $view;
 		$this->startTimer('application', $startTime);
 		$this->enable($on);
+		
+		//$topics=\Config::get('profiler::topics');
+		$this->topicsInfos= new \stdClass;
+		$xmlConf = simplexml_load_file( __DIR__.'/../config/config.xml' );
+		foreach($xmlConf->topics->topic as $topic){
+			$object='\\Profiler\\Topics\\'.ucfirst((String)$topic);
+			$this->topicsInfos->{$topic}= new $object((String)$topic,$topic['btn']);
+		}
 	}
+	
 
 	/**
 	 * Set the logger.
@@ -180,29 +190,8 @@ class Profiler implements LoggerAwareInterface {
 		return $this->readableSize(memory_get_peak_usage());
 	}
 
-	/**
-	 * Get all of the files that have been included.
-	 *
-	 * @return array
-	 */
-	public function getIncludedFiles()
-	{
-		// We'll cache this internally to avoid running this
-		// multiple times.
-		if(empty($this->includedFiles))
-		{
-			$files = get_included_files();
-
-			foreach($files as $filePath)
-			{
-				$size = $this->readableSize(filesize($filePath));
-
-				$this->includedFiles[] = compact('filePath', 'size');
-			}
-		}
-
-		return $this->includedFiles;
-	}
+	
+	
 
 	/**
 	 * A helper to convert a size into a readable format
@@ -211,7 +200,7 @@ class Profiler implements LoggerAwareInterface {
 	 * @param  string  $format
 	 * @return string
 	 */
-	protected function readableSize($size, $format = null)
+	static public function readableSize($size, $format = null)
 	{
 		// adapted from code at http://aidanlister.com/repos/v/function.size_readable.php
 		$sizes = array('bytes', 'kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB');
@@ -251,9 +240,11 @@ class Profiler implements LoggerAwareInterface {
 	 * @return string
 	 */
 	public function render()
-	{
+	{ 
 		if($this->enabled)
-		{
+		{ 
+			$this->queryTopics();
+			
 			$profiler = $this;
 			$logger = $this->log;
 			$assetPath = __DIR__.'/../../assets/';
@@ -265,6 +256,32 @@ class Profiler implements LoggerAwareInterface {
 			return ob_get_clean();
 		}
 	}
+	
+	private function queryTopics()
+	{
+		if(!$this->enabled) return;
+		foreach ($this->topicsInfos as $topic)  {
+			$topic->query();
+		}
+	}	
+	public function renderTopics()
+	{
+		if(!$this->enabled) return;
+		$result='';
+		foreach ($this->topicsInfos as $topic)  {
+			$result.= $topic->render($this->view);
+		}
+		return $result;
+	}
+	public function renderBtns()
+	{
+		if(!$this->enabled) return;
+		$result='';
+		foreach ($this->topicsInfos as $topic)  {
+			$result.=$topic->renderBtn();
+		}
+		return $result;
+	}	
 
 	/**
 	 * Render the profiler.
