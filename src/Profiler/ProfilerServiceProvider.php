@@ -143,9 +143,9 @@ class ProfilerServiceProvider extends ServiceProvider {
 			$app['router']->get('/_profiler/enable/{password?}', function($password = null) use ($app, $provider)
 			{
 				$config = $app['config'];
-				$password_required = in_array($app['env'], $config->get('profiler::require_password'));
+				$passwordRequired = in_array($app['env'], $config->get('profiler::require_password'));
 
-				if( ! $password_required or ($password_required and $password === $config->get('profiler::password')))
+				if( ! $passwordRequired or ($passwordRequired and $password === $config->get('profiler::password')))
 				{
 					$app['session']->put($provider::SESSION_HASH, true);
 				}
