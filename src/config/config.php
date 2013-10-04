@@ -35,10 +35,12 @@ return array(
 	| Require password on selected environments
 	| -----------------------------------------------------------------------------
 	|
-	| The profiler can be enabled by running directing your browser to:
-	| /_profiler/enable/{password}
+	| The profiler can be enabled by directing your browser to:
 	|
-	| The following environments will require a password to be given.
+	|   /_profiler/enable/{password}
+	|
+	| The password will be required if Laravel's environment is one of the
+	| environments listed below. Otherwise, the password is optional.
 	|
 	*/
 
