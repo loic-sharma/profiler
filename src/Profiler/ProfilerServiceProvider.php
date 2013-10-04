@@ -33,10 +33,13 @@ class ProfilerServiceProvider extends ServiceProvider {
 	 * @return void
 	 */
 	public function registerProfiler()
-	{	
-		$this->app['profiler'] = $this->app->share(function($app)
+	{
+		$sessionHash = static::SESSION_HASH;
+
+		$this->app['profiler'] = $this->app->share(function($app) use ($sessionHash)
 		{
 			$startTime = null;
+			$enabled = false;
 
 			// Let's use the Laravel start time if it is defined.
 			if(defined('LARAVEL_START'))
@@ -44,14 +47,26 @@ class ProfilerServiceProvider extends ServiceProvider {
 				$startTime = LARAVEL_START;
 			}
 
-			// Let's see if the profiler is enabled. If the config is set to null, or
-			// if the config is not found, we will fallback to the application's
-			// debug setting.
-			$enabled = $app['config']->get('profiler::enabled', null);
-
-			if(is_null($enabled))
+			// Check the session to see if the profiler has been manually enabled
+			// or disabled through the session. Note that the session completely overrides
+			// the configuration.
+			if($app['session']->has($sessionHash))
 			{
-				$enabled = $app['config']->get('app.debug');
+				$enabled = $app['session']->get($sessionHash);
+			}
+			
+			else
+			{
+				// The session contains no information as to wether the profiler is enabled
+				// or not. Let's check the configurations now. 
+				$enabled = $app['config']->get('profiler::enabled', null);
+
+				// If the config is set to null (or doesn't exist), we will fallback to the application's
+				// debug setting.
+				if(is_null($enabled))
+				{
+					$enabled = $app['config']->get('app.debug');
+				}
 			}
 
 			return new Profiler(new Logger, $startTime, $enabled);
