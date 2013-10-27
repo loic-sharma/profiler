@@ -20,4 +20,14 @@ class QueryRepository implements QueryRepositoryInterface {
 	{
 		$this->queries[] = compact($query, $time);
 	}
+
+	/**
+	 * Get the recorded queries.
+	 *
+	 * @return array
+	 */
+	public function getQueries()
+	{
+		return $this->queries;
+	}
 }

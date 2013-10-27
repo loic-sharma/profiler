@@ -10,4 +10,11 @@ interface QueryRepositoryInterface {
 	 * @return void
 	 */
 	public function record($query, $time);
+
+	/**
+	 * Get the recorded queries.
+	 *
+	 * @return array
+	 */
+	public function getQueries();
 }
