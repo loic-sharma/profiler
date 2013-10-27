@@ -7,7 +7,7 @@ class LaravelQueryRepository extends QueryRepository {
 	/**
 	 * Laravel's Database manager.
 	 *
-	 * @var  \Illuminate\Database\DatabaseManager
+	 * @var \Illuminate\Database\DatabaseManager
 	 */
 	protected $database;
 
