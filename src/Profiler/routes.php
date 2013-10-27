@@ -1,28 +1,27 @@
 <?php
 
-$app['router']->get('/_profiler/enable/{password?}', function($password = null) use ($app, $provider)
+$router->get('/_profiler/enable/{password?}', function($password = null) use ($config, $session, $redirect)
 {
-	$config = $app['config'];
-	$passwordRequired = in_array($app['env'], $config->get('profiler::require_password'));
+	$passwordRequired = in_array($app['env'], $config->get('profiler::session.environments'));
 
-	if( ! $passwordRequired or ($passwordRequired and $password === $config->get('profiler::password')))
+	if( ! $passwordRequired or ($password === $config->get('profiler::session.routes.password')))
 	{
-		$app['session']->put($provider::SESSION_HASH, true);
+		$session->put($config->get('profiler::session.key'), true);
 	}
 
-	return $app['redirect']->to('/');
+	return $redirect->to('/');
 });
 
-$app['router']->get('/_profiler/disable', function() use ($app, $provider)
+$router->get('/_profiler/disable', function() use ($config, $session, $redirect)
 {
-	$app['session']->put($provider::SESSION_HASH, false);
+	$session->put($config->get('provider::sesssion.key'), false);
 
-	return $app['redirect']->to('/');
+	return $redirect->to('/');
 });
 
-$app['router']->get('/_profiler/reset', function() use ($app, $provider)
+$router->get('/_profiler/reset', function() use ($config, $session, $redirect)
 {
-	$app['session']->forget($provider::SESSION_HASH);
+	$session->forget($config->get('provider::session.key'));
 
-	return $app['redirect']->to('/');
+	return $redirect->to('/');
 });

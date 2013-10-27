@@ -136,7 +136,11 @@ class ProfilerServiceProvider extends ServiceProvider {
 	 */
 	public function registerProfilerRouting()
 	{
-		$provider = $this;
+		$router = $app['router'];
+		$config = $app['config'];
+		$session = $app['session'];
+		$redirect = $app['redirect'];
+		$profiler = $app['profiler'];
 
 		$this->app->booting(function($app) use ($provider)
 		{
