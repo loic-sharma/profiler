@@ -3,7 +3,7 @@
 use Profiler\Profiler;
 use Illuminate\Config\Repository as Config;
 
-class ConfigPrimer {
+class ConfigPrimer implements PrimerInterface {
 
 	/**
 	 * The configuration repository.

@@ -5,7 +5,7 @@ use Profiler\Profiler;
 use Illuminate\Config\Repository as Config;
 use Illuminate\Session\SessionManager as Session;
 
-class ConfigPrimer {
+class ConfigPrimer implements PrimerInterface {
 
 	/**
 	 * The configuration repository.
