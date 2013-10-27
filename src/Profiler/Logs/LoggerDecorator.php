@@ -57,7 +57,7 @@ class LoggerDecorator extends AbstractLogger {
 	}
 
 	/**
-	 * Notify the logger know about the new log.
+	 * Notify the logger about the new log.
 	 *
 	 * @param mixed $level
 	 * @param string $message
