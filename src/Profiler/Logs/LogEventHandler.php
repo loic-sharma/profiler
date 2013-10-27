@@ -39,7 +39,7 @@ class LogEventHandler {
 	 */
 	public function subscribe(Dispatcher $events)
 	{
-        $events->listen('illuminate.log', 'Profiler\Logs\LogEventHandler@onLog');
+		$events->listen('illuminate.log', 'Profiler\Logs\LogEventHandler@onLog');
 	}
 
 	/**
