@@ -1,4 +1,4 @@
-<?php namespace Profiler;
+<?php namespace Profiler\Timers;
 
 class Timer {
 
