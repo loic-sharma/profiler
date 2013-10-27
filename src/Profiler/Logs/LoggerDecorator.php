@@ -64,7 +64,7 @@ class LoggerDecorator extends AbstractLogger {
 	 * @param array $context
 	 * @return void
 	 */
-	protected function notifyLogger($level, $message, array $context = array())
+	public function notifyLogger($level, $message, array $context = array())
 	{
 		switch($level)
 		{
