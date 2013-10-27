@@ -10,11 +10,11 @@ class Timer {
 	protected $startTime;
 
 	/**
-	 * The time at which the timer was ended.
+	 * The elapsed time (in milliseconds).
 	 *
 	 * @var double
 	 */
-	protected $endTime;
+	protected $elapsedTime;
 
 	/**
 	 * Start the timer.
@@ -25,21 +25,7 @@ class Timer {
 	public function __construct($startTime = null)
 	{
 		$this->startTime = $startTime ?: microtime(true);
-	}
-
-	/**
-	 * End the timer.
-	 *
-	 * @param  double|null  $time
-	 * @return void
-	 */
-	public function end($time = null)
-	{
-		// The timer should be ended only once.
-		if(is_null($this->endTime))
-		{
-			$this->endTime = $time ?: microtime(true);
-		}
+		$this->elapsedTime = 0;
 	}
 
 	/**
@@ -50,10 +36,60 @@ class Timer {
 	 */
 	public function getElapsedTime()
 	{
-		// Make sure the timer is turned off before we attempt
-		// to measure how much time elapsed.
-		$this->end();
+		// Get the latest reading from the timer if the timer is still running. 
+		if( ! is_null($this->startTime))
+		{
+			$elapsedTime = $this->formatTimeDifference($this->startTime, microtime(true));
 
-		return round(1000 * ($this->endTime - $this->startTime), 4);
+			return $this->elapsedTime + $elapsedTime;
+		}
+		else
+		{
+			return $this->elapsedTime;
+		}
+	}
+
+	/**
+	 * Pause the timer. This returns the current elapsed time.
+	 *
+	 * @param  double|null  $currentTime
+	 * @return double
+	 */
+	public function pause($currentTime = null)
+	{
+		if( ! is_null($this->startTime))
+		{
+			$currentTime = $currentTime ?: microtime(true);
+
+			$this->elapsedTime += $this->formatTimeDifference($this->startTime, $currentTime);
+
+			// We no longer need the timer's start time. If the
+			// timer is resumed, a new start time will be recorded.
+			$this->startTime = null;
+		}
+
+		return $this->elapsedTime;
+	}
+
+	/**
+	 * Resume the timer. 
+	 *
+	 * @return void
+	 */
+	public function resume()
+	{
+		$this->startTime = microtime(true);
+	}
+
+	/**
+	 * Find the difference between two times (in milliseconds).
+	 *
+	 * @param  double  $first
+	 * @param  double  $second
+	 * @return double
+	 */
+	protected function formatTimeDifference($first, $second)
+	{
+		return round(1000 * ($second - $first), 4);
 	}
 }
