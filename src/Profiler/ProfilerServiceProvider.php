@@ -18,10 +18,6 @@ class ProfilerServiceProvider extends ServiceProvider {
 
 		$this->registerProfiler();
 
-		$this->registerProfilerLoggerEvent();
-
-		$this->registerProfilerQueryEvent();
-
 		$this->registerProfilerRouting();
 
 		$this->registerProfilerToOutput();
@@ -70,62 +66,6 @@ class ProfilerServiceProvider extends ServiceProvider {
 			}
 
 			return new Profiler(new Logger, $startTime, $enabled);
-		});
-	}
-
-	/**
-	 * Register an event to automatically fetch Laravel's logs.
-	 *
-	 * @return void
-	 */
-	public function registerProfilerLoggerEvent()
-	{
-		$app = $this->app;
-
-		$app['events']->listen('illuminate.log', function($level, $message, $context) use ($app)
-		{
-			if($app['profiler']->isEnabled())
-			{
-				$app['profiler']->log->log($level, $message, $context);
-			}
-		});
-	}
-
-	/**
-	 * Register an event to automatically log database queries.
-	 *
-	 * @return void
-	 */
-	public function registerProfilerQueryEvent()
-	{
-		$app = $this->app;
-
-		$app['events']->listen('illuminate.query', function($query, $bindings, $time, $connectionName) use ($app)
-		{
-			// Don't log the query if the profiler is disabled.
-			if($app['profiler']->isEnabled())
-			{
-				// If the query had some bindings we'll need to add those back
-				// into the query.
-				if( ! empty($bindings))
-				{
-					// Let's grab the query's connection. We will use it to prepare and then quote
-					// the bindings before they are inserted back into the query.
-					$connection = $app['db']->connection($connectionName);
-					$pdo = $connection->getPdo();
-
-					$bindings = $connection->prepareBindings($bindings);
-
-					// Let's loop add each binding back into the original query, one binding
-					// at a time.
-					foreach($bindings as $binding)
-					{
-						$query = preg_replace('/\?/', $pdo->quote($binding), $query, 1);
-					}
-				}
-
-				$app['profiler']->log->query($query, $time);
-			}
 		});
 	}
 
