@@ -1,6 +1,6 @@
 # Profiler
 
-A PHP 5.3 profiler based off of Laravel 3's Anbu.
+A PHP 5.3 profiler based off of Laravel 3's Anbu. **NOTE**: this project is no longer being maintained. Please use [Barry's debug bar](https://github.com/barryvdh/laravel-debugbar) instead.
 
 ## Installation
 
