@@ -23,8 +23,6 @@ class ProfilerServiceProvider extends ServiceProvider {
 		$this->registerProfilerQueryEvent();
 
 		$this->registerProfilerRouting();
-
-		$this->registerProfilerToOutput();
 	}
 
 	/**
@@ -167,6 +165,16 @@ class ProfilerServiceProvider extends ServiceProvider {
 				return $app['redirect']->to('/');
 			});
 		});
+	}
+	
+	/**
+	 * Boot the service provider.
+	 * 
+	 * @return void
+	 */
+	public function boot()
+	{
+		$this->registerProfilerToOutput();
 	}
 
 	/**
